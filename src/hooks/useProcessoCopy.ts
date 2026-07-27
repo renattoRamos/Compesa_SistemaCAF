@@ -180,5 +180,120 @@ export const useProcessoCopy = (processo: Processo) => {
     }
   };
 
-  return { handleCopyToEmail, handleCopyToWhatsApp };
+  const handleCopyToEmailCD = async () => {
+    const getGreeting = () => {
+      const hour = new Date().getHours();
+      if (hour < 12) return "Bom dia!";
+      if (hour < 18) return "Boa tarde!";
+      return "Boa noite!";
+    };
+
+    const greeting = getGreeting();
+
+    const EMAIL_DESTINATARIO = "anamattos@compesa.com.br";
+    const EMAIL_CC =
+      "jessicatorres@compesa.com.br, swamirecife@compesa.com.br, luannesilva@compesa.com.br";
+    const EMAIL_TITULO =
+      "Verificação de disponibilidade do material no CD - CPR SUL/GPM";
+
+    const baseCellStyle =
+      "border: 1px solid black; padding: 6px; vertical-align: middle; word-wrap: break-word;";
+    const headerCellStyle = `style="background-color: #002060; color: white; font-weight: bold; ${baseCellStyle}"`;
+    const dataCellStyle = `style="color: #000066; ${baseCellStyle}"`;
+
+    const centeredHeaderCellStyle = `style="text-align: center; ${headerCellStyle.replace(
+      'style="',
+      ""
+    )}"`;
+    const leftHeaderCellStyle = `style="text-align: left; ${headerCellStyle.replace(
+      'style="',
+      ""
+    )}"`;
+    const centeredDataCellStyle = `style="text-align: center; ${dataCellStyle.replace(
+      'style="',
+      ""
+    )}"`;
+    const leftDataCellStyle = `style="text-align: left; ${dataCellStyle.replace(
+      'style="',
+      ""
+    )}"`;
+
+    const tableStyle =
+      'style="width: 100%; max-width: 800px; border-collapse: collapse; font-family: Arial, sans-serif; font-size: 9pt; table-layout: fixed;"';
+
+    const colgroup = `
+      <colgroup>
+        <col style="width: 20%;">
+        <col style="width: 65%;">
+        <col style="width: 15%;">
+      </colgroup>
+    `;
+
+    const materialsHeaderRows = `
+      <tr>
+        <th ${centeredHeaderCellStyle}>Código</th>
+        <th ${leftHeaderCellStyle}>Descrição</th>
+        <th ${centeredHeaderCellStyle}>Qtd.</th>
+      </tr>
+    `;
+
+    const materialsBodyRows = processo.materiais
+      .map(
+        (m) => `
+        <tr>
+          <td ${centeredDataCellStyle}>${m.codigo}</td>
+          <td ${leftDataCellStyle}>${m.descricao}</td>
+          <td ${centeredDataCellStyle}>${m.quantidade}</td>
+        </tr>`
+      )
+      .join("");
+
+    const finalHtml = `
+      <p style="font-family: Arial, sans-serif; font-size: 10pt;"><b>Destinatário:</b> ${EMAIL_DESTINATARIO}</p>
+      <p style="font-family: Arial, sans-serif; font-size: 10pt;"><b>CC:</b> ${EMAIL_CC}</p>
+      <p style="font-family: Arial, sans-serif; font-size: 10pt;"><b>Assunto:</b> ${EMAIL_TITULO}</p><br>
+      <p style="font-family: Arial, sans-serif; font-size: 10pt;">${greeting}</p><br>
+      <p style="font-family: Arial, sans-serif; font-size: 10pt;">Peço, por gentileza, que verifique a disponibilidade do material no CD:</p><br>
+      <table ${tableStyle}>
+        ${colgroup}
+        <thead>${materialsHeaderRows}</thead>
+        <tbody>${materialsBodyRows}</tbody>
+      </table><br>
+      <p style="font-family: Arial, sans-serif; font-size: 10pt;">Caso disponível apenas em ATA, peço por gentileza informações sobre o prazo de entrega e qual o próximo passo para que possamos seguir com a aquisição.</p>
+    `;
+
+    const plainTextTable = processo.materiais
+      .map((m) => `${m.codigo} | ${m.descricao} | ${m.quantidade}`)
+      .join("\n");
+
+    const plainText = `Destinatário: ${EMAIL_DESTINATARIO}
+CC: ${EMAIL_CC}
+Assunto: ${EMAIL_TITULO}
+
+${greeting}
+
+Peço, por gentileza, que verifique a disponibilidade do material no CD:
+
+Código | Descrição | Qtd.
+${plainTextTable}
+
+Caso disponível apenas em ATA, peço por gentileza informações sobre o prazo de entrega e qual o próximo passo para que possamos seguir com a aquisição.`;
+
+    try {
+      const htmlBlob = new Blob([finalHtml], { type: "text/html" });
+      const textBlob = new Blob([plainText], { type: "text/plain" });
+      await navigator.clipboard.write([
+        new ClipboardItem({
+          "text/html": htmlBlob,
+          "text/plain": textBlob,
+        }),
+      ]);
+      toast.success("E-mail para CD copiado com sucesso!");
+    } catch (error) {
+      console.error("Falha ao copiar E-mail para CD:", error);
+      toast.error("Não foi possível copiar o e-mail.");
+    }
+  };
+
+  return { handleCopyToEmail, handleCopyToWhatsApp, handleCopyToEmailCD };
 };

@@ -13,7 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { Copy, Clock } from "lucide-react";
+import { Copy, Clock, Mail } from "lucide-react";
 import { Processo } from "@/types/processo";
 import { useProcessoCopy } from "@/hooks/useProcessoCopy";
 import { ProcessoInfo } from "./ProcessoInfo";
@@ -32,7 +32,8 @@ export function ProcessoDetalhesDialog({
   open,
   onOpenChange,
 }: ProcessoDetalhesDialogProps) {
-  const { handleCopyToEmail, handleCopyToWhatsApp } = useProcessoCopy(processo);
+  const { handleCopyToEmail, handleCopyToWhatsApp, handleCopyToEmailCD } =
+    useProcessoCopy(processo);
   const [statusUpdateOpen, setStatusUpdateOpen] = useState(false);
 
   const canUpdateStatus =
@@ -50,9 +51,9 @@ export function ProcessoDetalhesDialog({
           </DialogHeader>
           <div className="space-y-6">
             <div className="space-y-3">
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between flex-wrap gap-2">
                 <h3 className="text-lg font-semibold text-foreground">Informações do Processo</h3>
-                <div className="flex gap-2">
+                <div className="flex gap-2 flex-wrap">
                   {canUpdateStatus && (
                     <Button
                       variant="outline"
@@ -64,6 +65,15 @@ export function ProcessoDetalhesDialog({
                       {processo.status === "Pendente" ? "Definir Prazo" : "Atualizar Status"}
                     </Button>
                   )}
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="gap-2 text-primary border-primary/30 hover:bg-primary/10"
+                    onClick={handleCopyToEmailCD}
+                  >
+                    <Mail className="h-4 w-4" />
+                    E-mail CD
+                  </Button>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="outline" size="sm" className="gap-2">
@@ -72,8 +82,11 @@ export function ProcessoDetalhesDialog({
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent>
+                      <DropdownMenuItem onClick={handleCopyToEmailCD}>
+                        E-mail CD
+                      </DropdownMenuItem>
                       <DropdownMenuItem onClick={handleCopyToEmail}>
-                        Cópia para E-mail
+                        Cópia para E-mail (SCDI)
                       </DropdownMenuItem>
                       <DropdownMenuItem onClick={handleCopyToWhatsApp}>
                         Cópia para WhatsApp
