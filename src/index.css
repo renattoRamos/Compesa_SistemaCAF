@@ -1,0 +1,93 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 
+  New design system based on your request. 
+  RGB values have been converted to HSL as per project standards.
+*/
+
+@layer base {
+  :root {
+    --background: 215 100% 96%;
+    --foreground: 220 69% 14%;
+    --card: 215 100% 97%;
+    --card-foreground: 220 69% 14%;
+    --popover: 215 100% 97%;
+    --popover-foreground: 220 69% 14%;
+    --primary: 216 100% 28%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 215 48% 90%;
+    --secondary-foreground: 220 69% 14%;
+    --muted: 215 67% 95%;
+    --muted-foreground: 215 38% 45%;
+    --accent: 78 73% 43%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84% 51%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 215 58% 86%;
+    --input: 215 70% 94%;
+    --ring: 216 100% 28%;
+    --radius: 0.5rem;
+
+    /* Nav/Header */
+    --nav-background: var(--background);
+    --nav-border: var(--border);
+
+    /* Sidebar Colors */
+    --sidebar-background: 219 100% 24%;
+    --sidebar-foreground: 0 0% 100%;
+    --sidebar-primary: 0 0% 100%;
+    --sidebar-primary-foreground: 219 100% 24%;
+    --sidebar-accent: 216 100% 36%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 216 100% 28%;
+    --sidebar-ring: 215 100% 71%;
+  }
+
+  .dark {
+    --background: 215 53% 11%;
+    --foreground: 215 48% 94%;
+    --card: 215 46% 13%;
+    --card-foreground: 215 48% 94%;
+    --popover: 215 46% 13%;
+    --popover-foreground: 215 48% 94%;
+    --primary: 213 88% 34%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 215 52% 23%;
+    --secondary-foreground: 215 48% 94%;
+    --muted: 215 50% 18%;
+    --muted-foreground: 215 38% 73%;
+    --accent: 78 59% 52%;
+    --accent-foreground: 215 53% 11%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 215 49% 33%;
+    --input: 215 53% 27%;
+    --ring: 213 88% 34%;
+    
+    /* Nav/Header */
+    --nav-background: var(--background);
+    --nav-border: var(--border);
+
+    /* Sidebar Colors (Dark Mode) */
+    --sidebar-background: 210 100% 11%;
+    --sidebar-foreground: 0 0% 100%;
+    --sidebar-primary: 0 0% 100%;
+    --sidebar-primary-foreground: 210 100% 11%;
+    --sidebar-accent: 216 100% 28%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 215 100% 17%;
+    --sidebar-ring: 217 100% 50%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "name": "Sistema CAF GPM",
+  "description": "Sistema de Solicitação SCDI e Lançamento de Nota Fiscal (NF)",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

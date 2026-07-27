@@ -1,0 +1,16 @@
+# Configurações de build para a Netlify
+[build]
+  # Comando para construir o site
+  command = "npm run build"
+  # Diretório que será publicado
+  publish = "dist"
+  # Ambiente de build
+  environment = { NODE_VERSION = "18" }
+
+# Regra de redirecionamento para SPAs (Single Page Applications)
+# Isso garante que todas as rotas sejam direcionadas para o index.html
+# e o React Router possa assumir o controle.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
