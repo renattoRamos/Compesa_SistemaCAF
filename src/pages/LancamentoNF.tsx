@@ -332,13 +332,13 @@ const LancamentoNF = () => {
             ) : (
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(handleFormSubmit)} className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
                     <FormField
                       control={form.control}
                       name="cnpj"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="flex items-center justify-between">
+                          <FormLabel className="flex items-center justify-between h-5">
                             <span>CNPJ</span>
                             {isSearchingCNPJ && (
                               <span className="flex items-center gap-1 text-xs text-primary font-normal animate-pulse">
@@ -376,7 +376,7 @@ const LancamentoNF = () => {
                       name="idFornecedor"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>ID Fornecedor</FormLabel>
+                          <FormLabel className="flex items-center h-5">ID Fornecedor</FormLabel>
                           <FormControl>
                             <Input
                               {...field}
