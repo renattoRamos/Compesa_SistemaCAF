@@ -16,6 +16,9 @@ import {
   generateIdFornecedorFromCNPJ,
   fetchCompanyByCNPJ,
 } from "@/lib/cnpj";
+import { NFModuleContainer } from "@/components/nf-upload/NFModuleContainer";
+import { NFFieldWarningTooltip } from "@/components/nf-upload/NFFieldWarningTooltip";
+import { NFExtractedData, ConfidenceScores } from "@/types/nf";
 
 const EMAIL_DESTINATARIO = "lucidelmamiranda@compesa.com.br";
 const EMAIL_CC = "fgoncalves@compesa.com.br, marianarezende@compesa.com.br";
@@ -24,6 +27,7 @@ const EMAIL_TITULO = "NF para Lançamento da CMA SUL/CPR SUL - GPM";
 const LancamentoNF = () => {
   const [reportData, setReportData] = useState<LancamentoNFValues | null>(null);
   const [isSearchingCNPJ, setIsSearchingCNPJ] = useState(false);
+  const [confidenceScores, setConfidenceScores] = useState<ConfidenceScores>({});
   const lastQueriedCNPJRef = useRef<string>("");
   const abortControllerRef = useRef<AbortController | null>(null);
 
@@ -40,6 +44,45 @@ const LancamentoNF = () => {
       tipoNota: undefined,
     },
   });
+
+  const handleAutoFill = (extractedData: NFExtractedData, confidence: ConfidenceScores) => {
+    setConfidenceScores(confidence);
+
+    if (extractedData.razaoSocialEmitente) {
+      form.setValue("razaoSocial", extractedData.razaoSocialEmitente, { shouldValidate: true });
+    }
+
+    if (extractedData.numeroNota) {
+      form.setValue("numeroNota", extractedData.numeroNota, { shouldValidate: true });
+    }
+
+    if (extractedData.oc) {
+      form.setValue("oc", extractedData.oc, { shouldValidate: true });
+    } else {
+      form.setValue("oc", "", { shouldValidate: true });
+    }
+
+    if (extractedData.scdi) {
+      form.setValue("scdi", extractedData.scdi, { shouldValidate: true });
+    }
+
+    if (extractedData.valorTotal !== undefined) {
+      form.setValue("valorTotal", extractedData.valorTotal, { shouldValidate: true });
+    }
+
+    if (extractedData.sei) {
+      form.setValue("sei", extractedData.sei, { shouldValidate: true });
+    }
+
+    if (extractedData.tipoNotaForm) {
+      form.setValue("tipoNota", extractedData.tipoNotaForm, { shouldValidate: true });
+    }
+
+    if (extractedData.cnpjEmitente) {
+      const formattedCnpj = formatCNPJ(extractedData.cnpjEmitente);
+      handleCNPJChange(formattedCnpj);
+    }
+  };
 
   const handleCNPJChange = async (rawValue: string) => {
     const formatted = formatCNPJ(rawValue);
@@ -330,206 +373,226 @@ const LancamentoNF = () => {
                 </div>
               </div>
             ) : (
-              <Form {...form}>
-                <form onSubmit={form.handleSubmit(handleFormSubmit)} className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
-                    <FormField
-                      control={form.control}
-                      name="cnpj"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="flex items-center justify-between h-5">
-                            <span>CNPJ</span>
-                            {isSearchingCNPJ && (
-                              <span className="flex items-center gap-1 text-xs text-primary font-normal animate-pulse">
-                                <Loader2 className="h-3 w-3 animate-spin" />
-                                Consultando...
-                              </span>
-                            )}
-                          </FormLabel>
-                          <FormControl>
-                            <div className="relative">
-                              <Input
-                                {...field}
-                                value={field.value || ""}
-                                placeholder="00.000.000/0000-00"
-                                maxLength={18}
-                                onChange={(e) => handleCNPJChange(e.target.value)}
-                                className="border-primary/40 pr-10"
-                              />
-                              <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-muted-foreground">
-                                {isSearchingCNPJ ? (
-                                  <Loader2 className="h-4 w-4 animate-spin text-primary" />
-                                ) : (
-                                  <Search className="h-4 w-4 opacity-50" />
-                                )}
-                              </div>
-                            </div>
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+              <div className="space-y-6">
+                <NFModuleContainer onAutoFill={handleAutoFill} />
 
-                    <FormField
-                      control={form.control}
-                      name="idFornecedor"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel className="flex items-center h-5">ID Fornecedor</FormLabel>
-                          <FormControl>
-                            <Input
-                              {...field}
-                              maxLength={10}
-                              placeholder="0000000000"
-                              onChange={(e) =>
-                                field.onChange(e.target.value.replace(/\D/g, ""))
-                              }
-                              className="border-primary/40"
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={form.control}
-                      name="razaoSocial"
-                      render={({ field }) => (
-                        <FormItem className="md:col-span-2">
-                          <FormLabel>Razão Social / Nome Fantasia</FormLabel>
-                          <FormControl>
-                            <Input {...field} placeholder="Nome da empresa" className="border-primary/40" />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={form.control}
-                      name="numeroNota"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Nº da Nota</FormLabel>
-                          <FormControl>
-                            <Input {...field} placeholder="Número da nota" className="border-primary/40" />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={form.control}
-                      name="oc"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>OC</FormLabel>
-                          <FormControl>
-                            <Input {...field} placeholder="Ordem de Compra" className="border-primary/40" />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={form.control}
-                      name="scdi"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>SCDI</FormLabel>
-                          <FormControl>
-                            <Input
-                              {...field}
-                              maxLength={5}
-                              placeholder="00000"
-                              onChange={(e) =>
-                                field.onChange(e.target.value.replace(/\D/g, ""))
-                              }
-                              className="border-primary/40"
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={form.control}
-                      name="valorTotal"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Valor Total</FormLabel>
-                          <FormControl>
-                            <Input
-                              placeholder="R$ 0,00"
-                              className="border-primary/40"
-                              value={field.value ? formatBRL(field.value) : ""}
-                              onChange={(e) => {
-                                const rawValue = e.target.value.replace(/\D/g, "");
-                                const numericValue = rawValue
-                                  ? parseFloat(rawValue) / 100
-                                  : 0;
-                                field.onChange(numericValue);
-                              }}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={form.control}
-                      name="sei"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>SEI</FormLabel>
-                          <FormControl>
-                            <Input {...field} placeholder="Processo SEI" className="border-primary/40" />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={form.control}
-                      name="tipoNota"
-                      render={({ field }) => (
-                        <FormItem className="md:col-span-2">
-                          <FormLabel>Tipo de Nota</FormLabel>
-                          <Select
-                            onValueChange={field.onChange}
-                            defaultValue={field.value}
-                          >
+                <Form {...form}>
+                  <form onSubmit={form.handleSubmit(handleFormSubmit)} className="space-y-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+                      <FormField
+                        control={form.control}
+                        name="cnpj"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="flex items-center justify-between h-5">
+                              <span>CNPJ</span>
+                              {isSearchingCNPJ && (
+                                <span className="flex items-center gap-1 text-xs text-primary font-normal animate-pulse">
+                                  <Loader2 className="h-3 w-3 animate-spin" />
+                                  Consultando...
+                                </span>
+                              )}
+                            </FormLabel>
                             <FormControl>
-                              <SelectTrigger className="border-primary/40">
-                                <SelectValue placeholder="Selecione o tipo de nota" />
-                              </SelectTrigger>
+                              <NFFieldWarningTooltip confidence={confidenceScores.cnpjEmitente}>
+                                <div className="relative">
+                                  <Input
+                                    {...field}
+                                    value={field.value || ""}
+                                    placeholder="00.000.000/0000-00"
+                                    maxLength={18}
+                                    onChange={(e) => handleCNPJChange(e.target.value)}
+                                    className="border-primary/40 pr-10"
+                                  />
+                                  <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-muted-foreground">
+                                    {isSearchingCNPJ ? (
+                                      <Loader2 className="h-4 w-4 animate-spin text-primary" />
+                                    ) : (
+                                      <Search className="h-4 w-4 opacity-50" />
+                                    )}
+                                  </div>
+                                </div>
+                              </NFFieldWarningTooltip>
                             </FormControl>
-                            <SelectContent>
-                              <SelectItem value="Compra de Material">
-                                Compra de Material
-                              </SelectItem>
-                              <SelectItem value="Serviço">Serviço</SelectItem>
-                              <SelectItem value="Locação">Locação</SelectItem>
-                            </SelectContent>
-                          </Select>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
 
-                  <div className="flex justify-end">
-                    <Button type="submit">Gerar E-mail</Button>
-                  </div>
-                </form>
-              </Form>
+                      <FormField
+                        control={form.control}
+                        name="idFornecedor"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="flex items-center h-5">ID Fornecedor</FormLabel>
+                            <FormControl>
+                              <NFFieldWarningTooltip confidence={confidenceScores.cnpjEmitente}>
+                                <Input
+                                  {...field}
+                                  maxLength={10}
+                                  placeholder="0000000000"
+                                  onChange={(e) =>
+                                    field.onChange(e.target.value.replace(/\D/g, ""))
+                                  }
+                                  className="border-primary/40"
+                                />
+                              </NFFieldWarningTooltip>
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name="razaoSocial"
+                        render={({ field }) => (
+                          <FormItem className="md:col-span-2">
+                            <FormLabel>Razão Social / Nome Fantasia</FormLabel>
+                            <FormControl>
+                              <NFFieldWarningTooltip confidence={confidenceScores.razaoSocialEmitente}>
+                                <Input {...field} placeholder="Nome da empresa" className="border-primary/40" />
+                              </NFFieldWarningTooltip>
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name="numeroNota"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Nº da Nota</FormLabel>
+                            <FormControl>
+                              <NFFieldWarningTooltip confidence={confidenceScores.numeroNota}>
+                                <Input {...field} placeholder="Número da nota" className="border-primary/40" />
+                              </NFFieldWarningTooltip>
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name="oc"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>OC</FormLabel>
+                            <FormControl>
+                              <NFFieldWarningTooltip confidence={confidenceScores.oc}>
+                                <Input {...field} placeholder="Ordem de Compra" className="border-primary/40" />
+                              </NFFieldWarningTooltip>
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name="scdi"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>SCDI</FormLabel>
+                            <FormControl>
+                              <NFFieldWarningTooltip confidence={confidenceScores.scdi}>
+                                <Input
+                                  {...field}
+                                  maxLength={5}
+                                  placeholder="00000"
+                                  onChange={(e) =>
+                                    field.onChange(e.target.value.replace(/\D/g, ""))
+                                  }
+                                  className="border-primary/40"
+                                />
+                              </NFFieldWarningTooltip>
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name="valorTotal"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Valor Total</FormLabel>
+                            <FormControl>
+                              <NFFieldWarningTooltip confidence={confidenceScores.valorTotal}>
+                                <Input
+                                  placeholder="R$ 0,00"
+                                  className="border-primary/40"
+                                  value={field.value ? formatBRL(field.value) : ""}
+                                  onChange={(e) => {
+                                    const rawValue = e.target.value.replace(/\D/g, "");
+                                    const numericValue = rawValue
+                                      ? parseFloat(rawValue) / 100
+                                      : 0;
+                                    field.onChange(numericValue);
+                                  }}
+                                />
+                              </NFFieldWarningTooltip>
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name="sei"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>SEI</FormLabel>
+                            <FormControl>
+                              <NFFieldWarningTooltip confidence={confidenceScores.sei}>
+                                <Input {...field} placeholder="Processo SEI" className="border-primary/40" />
+                              </NFFieldWarningTooltip>
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+
+                      <FormField
+                        control={form.control}
+                        name="tipoNota"
+                        render={({ field }) => (
+                          <FormItem className="md:col-span-2">
+                            <FormLabel>Tipo de Nota</FormLabel>
+                            <Select
+                              onValueChange={field.onChange}
+                              value={field.value}
+                            >
+                              <FormControl>
+                                <SelectTrigger className="border-primary/40">
+                                  <SelectValue placeholder="Selecione o tipo de nota" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                <SelectItem value="Compra de Material">
+                                  Compra de Material
+                                </SelectItem>
+                                <SelectItem value="Serviço">Serviço</SelectItem>
+                                <SelectItem value="Locação">Locação</SelectItem>
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+
+                    <div className="flex justify-end">
+                      <Button type="submit">Gerar E-mail</Button>
+                    </div>
+                  </form>
+                </Form>
+              </div>
             )}
           </CardContent>
         </Card>
