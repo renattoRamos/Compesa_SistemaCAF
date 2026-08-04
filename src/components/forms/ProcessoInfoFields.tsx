@@ -25,9 +25,15 @@ interface ProcessoInfoFieldsProps {
 
 export function ProcessoInfoFields({ form, valorTotal }: ProcessoInfoFieldsProps) {
   return (
-    <div className="space-y-4">
-      <h3 className="text-lg font-semibold text-foreground">Informações do Processo</h3>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+    <div className="space-y-3">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-border pb-2">
+        <h3 className="text-sm font-bold uppercase tracking-wide text-foreground">Informações do Processo</h3>
+        <div className="inline-flex items-center gap-1.5 bg-primary/10 text-primary px-3 py-1 rounded-md text-xs font-semibold border border-primary/20 w-fit">
+          <span>Valor Total:</span>
+          <span className="font-bold">{formatBRL(valorTotal)}</span>
+        </div>
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
         <DatePickerField
           control={form.control}
           name="dataProcesso"
@@ -45,7 +51,7 @@ export function ProcessoInfoFields({ form, valorTotal }: ProcessoInfoFieldsProps
                   placeholder="000000"
                   maxLength={6}
                   onChange={e => field.onChange(e.target.value.replace(/\D/g, ""))}
-                  className="border-primary/40"
+                  className="border-primary/40 text-sm h-9"
                 />
               </FormControl>
               <FormMessage />
@@ -64,7 +70,7 @@ export function ProcessoInfoFields({ form, valorTotal }: ProcessoInfoFieldsProps
                   placeholder="000000"
                   maxLength={6}
                   onChange={e => field.onChange(e.target.value.replace(/\D/g, ""))}
-                  className="border-primary/40"
+                  className="border-primary/40 text-sm h-9"
                 />
               </FormControl>
               <FormMessage />
@@ -79,7 +85,7 @@ export function ProcessoInfoFields({ form, valorTotal }: ProcessoInfoFieldsProps
               <FormLabel>Coordenação</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
-                  <SelectTrigger className="border-primary/40">
+                  <SelectTrigger className="border-primary/40 text-sm h-9">
                     <SelectValue placeholder="Selecione a coordenação" />
                   </SelectTrigger>
                 </FormControl>
@@ -104,19 +110,14 @@ export function ProcessoInfoFields({ form, valorTotal }: ProcessoInfoFieldsProps
               <Textarea
                 {...field}
                 placeholder="Descreva a aplicação..."
-                rows={3}
-                className="border-primary/40"
+                rows={2}
+                className="border-primary/40 text-sm min-h-[60px] resize-y"
               />
             </FormControl>
             <FormMessage />
           </FormItem>
         )}
       />
-      <div className="bg-muted p-4 rounded-lg">
-        <p className="text-sm font-medium text-foreground">
-          Valor Total: {formatBRL(valorTotal)}
-        </p>
-      </div>
     </div>
   );
 }

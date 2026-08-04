@@ -123,11 +123,11 @@ export const NFPreviewModal: React.FC<NFPreviewModalProps> = ({
                   </div>
                   <div>
                     <span className="text-muted-foreground block">SCDI</span>
-                    <span className="font-medium">{extractedData.scdi || "-"}</span>
+                    <span className="font-medium text-muted-foreground italic">Preenchimento Manual</span>
                   </div>
                   <div>
                     <span className="text-muted-foreground block">Processo SEI</span>
-                    <span className="font-medium">{extractedData.sei || "-"}</span>
+                    <span className="font-medium text-muted-foreground italic">Preenchimento Manual</span>
                   </div>
                 </div>
               </div>

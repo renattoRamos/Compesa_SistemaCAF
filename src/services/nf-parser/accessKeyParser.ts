@@ -38,6 +38,31 @@ const UF_CODES: Record<string, string> = {
 export function parseNFeAccessKey(rawChave: string): ParsedAccessKey {
   const digits = rawChave.replace(/\D/g, "");
 
+  if (digits.length === 50) {
+    // NFS-e Nacional 50-digit Chave de Acesso
+    const ufCode = digits.substring(0, 2);
+    const ufSigla = UF_CODES[ufCode] || undefined;
+
+    // Search for a valid 14-digit CNPJ sequence in the 50-digit key
+    let cnpjEmitente: string | undefined;
+    for (let i = 6; i <= 25; i++) {
+      const candidate = digits.substring(i, i + 14);
+      if (candidate.length === 14 && isValidCNPJ(candidate)) {
+        cnpjEmitente = formatCNPJ(candidate);
+        break;
+      }
+    }
+
+    return {
+      isValid: true,
+      chave: digits,
+      ufCode,
+      ufSigla,
+      cnpjEmitente,
+      modelo: "NFS-e",
+    };
+  }
+
   if (digits.length !== 44) {
     return {
       isValid: false,

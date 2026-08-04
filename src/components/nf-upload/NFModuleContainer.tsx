@@ -14,7 +14,7 @@ interface NFModuleContainerProps {
   onClearForm?: () => void;
 }
 
-export const NFModuleContainer: React.FC<NFModuleContainerProps> = ({ onAutoFill }) => {
+export const NFModuleContainer: React.FC<NFModuleContainerProps> = ({ onAutoFill, onClearForm }) => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [fileMetadata, setFileMetadata] = useState<NFFileMetadata | null>(null);
   const [lastResult, setLastResult] = useState<NFProcessingResult | null>(null);
@@ -95,7 +95,10 @@ export const NFModuleContainer: React.FC<NFModuleContainerProps> = ({ onAutoFill
     }
     setFileMetadata(null);
     setLastResult(null);
-    toast.info("Arquivo de Nota Fiscal removido.");
+    if (onClearForm) {
+      onClearForm();
+    }
+    toast.info("Arquivo de Nota Fiscal removido e campos limpos.");
   };
 
   return (

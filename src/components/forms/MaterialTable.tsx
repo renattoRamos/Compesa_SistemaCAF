@@ -169,9 +169,9 @@ export function MaterialTable({ materiais, setMateriais, form }: MaterialTablePr
   };
 
   return (
-    <div className="space-y-4">
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <h3 className="text-lg font-semibold text-foreground">Informações dos Materiais</h3>
+    <div className="space-y-3">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-border pb-2">
+        <h3 className="text-sm font-bold uppercase tracking-wide text-foreground">Informações dos Materiais</h3>
         <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
           <input
             type="file"
@@ -180,53 +180,54 @@ export function MaterialTable({ materiais, setMateriais, form }: MaterialTablePr
             style={{ display: "none" }}
             accept=".xls, .xlsx"
           />
-          <Button type="button" variant="outline" size="sm" onClick={handleImportClick} className="justify-center">
-            <Upload className="h-4 w-4 mr-2" />
+          <Button type="button" variant="outline" size="sm" onClick={handleImportClick} className="justify-center h-8 text-xs px-3">
+            <Upload className="h-3.5 w-3.5 mr-1.5" />
             Importar XLSX
           </Button>
-          <Button type="button" variant="secondary" size="sm" onClick={adicionarMaterial} className="justify-center">
-            <Plus className="h-4 w-4 mr-2" />
+          <Button type="button" variant="secondary" size="sm" onClick={adicionarMaterial} className="justify-center h-8 text-xs px-3">
+            <Plus className="h-3.5 w-3.5 mr-1.5" />
             Adicionar Material
           </Button>
         </div>
       </div>
 
       {materiais.length > 0 && (
-        <div className="border border-border rounded-lg overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full table-fixed">
-              <thead className="bg-muted">
+        <div className="border border-border rounded-lg overflow-hidden bg-card shadow-xs">
+          <div className="overflow-x-auto min-w-full">
+            <table className="w-full table-fixed text-xs">
+              <thead className="bg-muted/70 border-b border-border">
                 <tr>
-                  <th className="text-left p-3 text-sm font-medium text-foreground">Descrição</th>
-                  <th className="text-left p-3 text-sm font-medium text-foreground w-[120px]">Código</th>
-                  <th className="text-right p-3 text-sm font-medium text-foreground w-[80px]">Qtd.</th>
-                  <th className="text-left p-3 text-sm font-medium text-foreground w-[90px]">Unid.M</th>
-                  <th className="text-right p-3 text-sm font-medium text-foreground w-[120px]">Unitário</th>
-                  <th className="text-right p-3 text-sm font-medium text-foreground w-[130px]">Valor Total</th>
-                  <th className="text-left p-3 text-sm font-medium text-foreground w-[140px]">Almoxarifado</th>
-                  <th className="text-left p-3 text-sm font-medium text-foreground w-[140px]">Estoque CD</th>
-                  <th className="text-left p-3 text-sm font-medium text-foreground w-[140px]">ATA/ARP</th>
-                  <th className="w-16 p-3"></th>
+                  <th className="text-left p-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">Descrição</th>
+                  <th className="text-left p-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider w-[110px]">Código</th>
+                  <th className="text-right p-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider w-[70px]">Qtd.</th>
+                  <th className="text-left p-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider w-[80px]">Unid.M</th>
+                  <th className="text-right p-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider w-[110px]">Unitário</th>
+                  <th className="text-right p-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider w-[115px]">Valor Total</th>
+                  <th className="text-left p-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider w-[125px]">Almoxarifado</th>
+                  <th className="text-left p-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider w-[125px]">Estoque CD</th>
+                  <th className="text-left p-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider w-[125px]">ATA/ARP</th>
+                  <th className="w-10 p-2"></th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody className="divide-y divide-border">
                 {materiais.map((material, index) => (
-                  <tr key={material.tempId} className="border-t border-border align-top">
-                    <td className="p-2">
+                  <tr key={material.tempId} className="hover:bg-muted/30 align-middle">
+                    <td className="p-1.5">
                       <Input
                         value={material.descricao}
                         onChange={e =>
                           atualizarMaterial(material.tempId, "descricao", e.target.value.toUpperCase())
                         }
-                        placeholder="Descrição"
+                        placeholder="Descrição do material"
+                        className="h-8 text-xs px-2"
                       />
                       {getMaterialError(index, "descricao") && (
-                        <p className="text-xs text-destructive mt-1">
+                        <p className="text-[10px] text-destructive mt-0.5 font-medium truncate">
                           {getMaterialError(index, "descricao")}
                         </p>
                       )}
                     </td>
-                    <td className="p-2">
+                    <td className="p-1.5">
                       <Input
                         value={material.codigo}
                         onChange={e =>
@@ -234,14 +235,15 @@ export function MaterialTable({ materiais, setMateriais, form }: MaterialTablePr
                         }
                         placeholder="Código"
                         maxLength={10}
+                        className="h-8 text-xs px-2"
                       />
                       {getMaterialError(index, "codigo") && (
-                        <p className="text-xs text-destructive mt-1">
+                        <p className="text-[10px] text-destructive mt-0.5 font-medium truncate">
                           {getMaterialError(index, "codigo")}
                         </p>
                       )}
                     </td>
-                    <td className="p-2">
+                    <td className="p-1.5">
                       <Input
                         type="number"
                         value={material.quantidade}
@@ -249,22 +251,22 @@ export function MaterialTable({ materiais, setMateriais, form }: MaterialTablePr
                           atualizarMaterial(material.tempId, "quantidade", parseFloat(e.target.value) || 0)
                         }
                         min="1"
-                        className="text-right"
+                        className="h-8 text-xs px-2 text-right"
                       />
                       {getMaterialError(index, "quantidade") && (
-                        <p className="text-xs text-destructive mt-1">
+                        <p className="text-[10px] text-destructive mt-0.5 font-medium truncate">
                           {getMaterialError(index, "quantidade")}
                         </p>
                       )}
                     </td>
-                    <td className="p-2">
+                    <td className="p-1.5">
                       <Select
                         value={material.unidadeMedida}
                         onValueChange={value =>
                           atualizarMaterial(material.tempId, "unidadeMedida", value as Material["unidadeMedida"])
                         }
                       >
-                        <SelectTrigger>
+                        <SelectTrigger className="h-8 text-xs px-2">
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
@@ -279,7 +281,7 @@ export function MaterialTable({ materiais, setMateriais, form }: MaterialTablePr
                         </SelectContent>
                       </Select>
                     </td>
-                    <td className="p-2">
+                    <td className="p-1.5">
                       <Input
                         type="text"
                         value={formatBRL(material.valorUnitario)}
@@ -289,27 +291,27 @@ export function MaterialTable({ materiais, setMateriais, form }: MaterialTablePr
                           atualizarMaterial(material.tempId, "valorUnitario", numericValue);
                         }}
                         placeholder="R$ 0,00"
-                        className="text-right"
+                        className="h-8 text-xs px-2 text-right"
                       />
                       {getMaterialError(index, "valorUnitario") && (
-                        <p className="text-xs text-destructive mt-1">
+                        <p className="text-[10px] text-destructive mt-0.5 font-medium truncate">
                           {getMaterialError(index, "valorUnitario")}
                         </p>
                       )}
                     </td>
-                    <td className="p-2 text-right">
+                    <td className="p-1.5 text-right">
                       <Input
                         value={formatBRL(material.quantidade * material.valorUnitario)}
                         disabled
-                        className="bg-muted text-right"
+                        className="h-8 text-xs px-2 bg-muted/60 text-right font-medium"
                       />
                     </td>
-                    <td className="p-2">
+                    <td className="p-1.5">
                       <Select
                         value={material.almoxarifado}
                         onValueChange={value => atualizarMaterial(material.tempId, "almoxarifado", value as Material["almoxarifado"])}
                       >
-                        <SelectTrigger>
+                        <SelectTrigger className="h-8 text-xs px-2">
                           <SelectValue placeholder="Selecione" />
                         </SelectTrigger>
                         <SelectContent>
@@ -318,12 +320,12 @@ export function MaterialTable({ materiais, setMateriais, form }: MaterialTablePr
                         </SelectContent>
                       </Select>
                     </td>
-                    <td className="p-2">
+                    <td className="p-1.5">
                       <Select
                         value={material.estoqueCD}
                         onValueChange={value => atualizarMaterial(material.tempId, "estoqueCD", value as Material["estoqueCD"])}
                       >
-                        <SelectTrigger>
+                        <SelectTrigger className="h-8 text-xs px-2">
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
@@ -332,12 +334,12 @@ export function MaterialTable({ materiais, setMateriais, form }: MaterialTablePr
                         </SelectContent>
                       </Select>
                     </td>
-                    <td className="p-2">
+                    <td className="p-1.5">
                       <Select
                         value={material.ataArp}
                         onValueChange={value => atualizarMaterial(material.tempId, "ataArp", value as Material["ataArp"])}
                       >
-                        <SelectTrigger>
+                        <SelectTrigger className="h-8 text-xs px-2">
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
@@ -346,16 +348,17 @@ export function MaterialTable({ materiais, setMateriais, form }: MaterialTablePr
                         </SelectContent>
                       </Select>
                     </td>
-                    <td className="p-2">
+                    <td className="p-1.5 text-center">
                       {materiais.length > 1 && (
                         <Button
                           type="button"
                           variant="ghost"
                           size="sm"
                           onClick={() => removerMaterial(material.tempId)}
-                          className="h-8 w-8 p-0"
+                          className="h-7 w-7 p-0 hover:bg-destructive/10"
+                          title="Remover item"
                         >
-                          <Trash2 className="h-4 w-4 text-destructive" />
+                          <Trash2 className="h-3.5 w-3.5 text-destructive" />
                         </Button>
                       )}
                     </td>

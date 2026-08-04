@@ -113,15 +113,15 @@ export function AutorizacaoForm({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-[100rem] w-[95vw] overflow-y-auto !max-w-none max-h-[95vh]">
-        <DialogHeader>
-          <DialogTitle>{isEditing ? "Editar" : "Solicitar"} Autorização SCDI</DialogTitle>
-          <DialogDescription>
+      <DialogContent className="max-w-6xl w-[92vw] overflow-y-auto max-h-[90vh] p-4 sm:p-6">
+        <DialogHeader className="pb-2 border-b border-border">
+          <DialogTitle className="text-lg font-bold">{isEditing ? "Editar" : "Solicitar"} Autorização SCDI</DialogTitle>
+          <DialogDescription className="text-xs">
             Preencha as informações abaixo para {isEditing ? "editar o" : "criar um novo"} processo.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
+          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4 pt-1">
 
             <ProcessoInfoFields form={form} valorTotal={valorTotal} />
 
@@ -131,11 +131,11 @@ export function AutorizacaoForm({
               form={form}
             />
 
-            <div className="flex justify-end gap-4 pt-4 border-t border-border">
-              <Button type="button" variant="outline" onClick={() => onOpenChange(false)} disabled={isSaving}>
+            <div className="flex justify-end gap-3 pt-3 border-t border-border">
+              <Button type="button" variant="outline" size="sm" onClick={() => onOpenChange(false)} disabled={isSaving}>
                 Cancelar
               </Button>
-              <Button type="submit" disabled={isSaving}>
+              <Button type="submit" size="sm" disabled={isSaving}>
                 {isSaving ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />

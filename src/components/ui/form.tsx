@@ -65,7 +65,7 @@ const FormItem = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivEl
 
     return (
       <FormItemContext.Provider value={{ id }}>
-        <div ref={ref} className={cn("space-y-2", className)} {...props} />
+        <div ref={ref} className={cn("space-y-1.5 min-w-0 w-full", className)} {...props} />
       </FormItemContext.Provider>
     );
   },
@@ -75,10 +75,21 @@ FormItem.displayName = "FormItem";
 const FormLabel = React.forwardRef<
   React.ElementRef<typeof LabelPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root>
->(({ className, ...props }, ref) => {
+>(({ className, children, ...props }, ref) => {
   const { error, formItemId } = useFormField();
+  const labelText = typeof children === "string" ? children : undefined;
 
-  return <Label ref={ref} className={cn(error && "text-destructive", className)} htmlFor={formItemId} {...props} />;
+  return (
+    <Label
+      ref={ref}
+      className={cn("text-xs font-semibold text-foreground tracking-tight block max-w-full truncate", error && "text-destructive", className)}
+      htmlFor={formItemId}
+      title={labelText}
+      {...props}
+    >
+      {children}
+    </Label>
+  );
 });
 FormLabel.displayName = "FormLabel";
 

@@ -102,8 +102,8 @@ export async function fetchCompanyByCNPJ(
     const nomeFantasia = typeof data.nome_fantasia === "string" ? data.nome_fantasia.trim() : "";
     const razaoSocial = typeof data.razao_social === "string" ? data.razao_social.trim() : "";
 
-    // Priority: Nome Fantasia if non-empty, otherwise Razão Social
-    const nameToUse = nomeFantasia || razaoSocial;
+    // Priority: Razão Social (Legal Name) if available, otherwise fallback to Nome Fantasia
+    const nameToUse = razaoSocial || nomeFantasia;
 
     if (!nameToUse) {
       return null;

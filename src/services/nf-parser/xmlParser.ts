@@ -258,21 +258,6 @@ export function parseXMLInvoice(xmlContent: string): NFProcessingResult {
       }
     }
 
-    // Global text scan for SEI and SCDI
-    const fullText = xmlContent.replace(/<[^>]+>/g, " ");
-
-    const seiMatch = fullText.match(/(?:SEI|PROCESSO SEI|PROCESSO)\s*[:#.-]?\s*([0-9./-]+)/i);
-    if (seiMatch && seiMatch[1]) {
-      data.sei = seiMatch[1].trim();
-      confidence.sei = "medium";
-    }
-
-    const scdiMatch = fullText.match(/(?:SCDI)\s*[:#.-]?\s*(\d{1,5})/i);
-    if (scdiMatch && scdiMatch[1]) {
-      data.scdi = scdiMatch[1].padStart(5, "0");
-      confidence.scdi = "medium";
-    }
-
     // Determine missing and low confidence fields
     const missingFields: string[] = [];
     const lowConfidenceFields: string[] = [];
@@ -282,8 +267,6 @@ export function parseXMLInvoice(xmlContent: string): NFProcessingResult {
     if (!data.numeroNota) missingFields.push("Nº da Nota");
     if (!data.valorTotal) missingFields.push("Valor Total");
     if (!data.oc) missingFields.push("OC");
-    if (!data.sei) missingFields.push("SEI");
-    if (!data.scdi) missingFields.push("SCDI");
 
     Object.entries(confidence).forEach(([key, val]) => {
       if (val === "low") {

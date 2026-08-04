@@ -33,15 +33,15 @@ export const useProcessoCopy = (processo: Processo) => {
       "jessicatorres@compesa.com.br, swamirecife@compesa.com.br, luannesilva@compesa.com.br";
     const EMAIL_TITULO = "Material SCDI - CMA SUL/GPM";
 
-    const dataFontColor = "color: #000066;";
+    const dataFontColor = "";
     const baseCellStyle =
       "border: 1px solid black; padding: 5px; vertical-align: middle; word-wrap: break-word;";
-    const headerCellStyle = `style="background-color: #002060; color: white; font-weight: bold; ${baseCellStyle}"`;
-    const dataCellStyle = `style="${baseCellStyle} ${dataFontColor}"`;
-    const valueCellStyle = `style="background-color: #002060; color: white; ${baseCellStyle}"`;
-    const redBoldStyle = "color: red; font-weight: bold; text-shadow: 1px 1px 1px rgba(0,0,0,0.3);";
-    const redBoldValueCellStyle = `style="background-color: #002060; ${redBoldStyle} font-size: 18pt; ${baseCellStyle}"`;
-    const totalValueCellStyle = `style="background-color: #002060; color: white; font-weight: bold; font-size: 10pt; ${baseCellStyle}"`;
+    const headerCellStyle = `style="background-color: #f1f5f9; font-weight: bold; ${baseCellStyle}"`;
+    const dataCellStyle = `style="${baseCellStyle}"`;
+    const valueCellStyle = `style="${baseCellStyle}"`;
+    const redBoldStyle = "font-weight: bold;";
+    const redBoldValueCellStyle = `style="${redBoldStyle} font-size: 18pt; ${baseCellStyle}"`;
+    const totalValueCellStyle = `style="font-weight: bold; font-size: 10pt; ${baseCellStyle}"`;
 
     const centeredHeaderCellStyle = `style="text-align: center; ${headerCellStyle.replace(
       'style="',
@@ -198,8 +198,8 @@ export const useProcessoCopy = (processo: Processo) => {
 
     const baseCellStyle =
       "border: 1px solid black; padding: 6px; vertical-align: middle; word-wrap: break-word;";
-    const headerCellStyle = `style="background-color: #002060; color: white; font-weight: bold; ${baseCellStyle}"`;
-    const dataCellStyle = `style="color: #000066; ${baseCellStyle}"`;
+    const headerCellStyle = `style="background-color: #f1f5f9; font-weight: bold; ${baseCellStyle}"`;
+    const dataCellStyle = `style="${baseCellStyle}"`;
 
     const centeredHeaderCellStyle = `style="text-align: center; ${headerCellStyle.replace(
       'style="',

@@ -103,15 +103,15 @@ export function SolicitacaoCompraForm({ open, onOpenChange }: SolicitacaoCompraF
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-3xl">
-        <DialogHeader>
-          <DialogTitle>Solicitar Compra ao ADM</DialogTitle>
-          <DialogDescription>
+      <DialogContent className="max-w-2xl sm:max-w-3xl p-4 sm:p-6">
+        <DialogHeader className="pb-2 border-b border-border">
+          <DialogTitle className="text-lg font-bold">Solicitar Compra ao ADM</DialogTitle>
+          <DialogDescription className="text-xs">
             Preencha as informações abaixo para solicitar a compra de um novo material.
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
+          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4 pt-1">
             <FormField
               control={form.control}
               name="justificativa"
@@ -122,7 +122,8 @@ export function SolicitacaoCompraForm({ open, onOpenChange }: SolicitacaoCompraF
                     <Textarea
                       {...field}
                       placeholder="Descreva o motivo da necessidade do material..."
-                      rows={4}
+                      rows={3}
+                      className="text-sm min-h-[70px] resize-y"
                     />
                   </FormControl>
                   <FormMessage />
@@ -134,116 +135,126 @@ export function SolicitacaoCompraForm({ open, onOpenChange }: SolicitacaoCompraF
               control={form.control}
               name="temCodigo"
               render={({ field }) => (
-                <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                <FormItem className="flex flex-row items-center space-x-3 space-y-0 rounded-md border p-3 bg-muted/30">
                   <FormControl>
                     <Checkbox checked={field.value} onCheckedChange={field.onChange} />
                   </FormControl>
-                  <div className="space-y-1 leading-none">
-                    <FormLabel>Você tem o código do item?</FormLabel>
+                  <div className="space-y-0.5 leading-none">
+                    <FormLabel className="cursor-pointer font-medium text-xs">Você tem o código do item?</FormLabel>
                   </div>
                 </FormItem>
               )}
             />
 
             {temCodigo && (
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-md font-semibold">Materiais</h3>
-                  <Button type="button" size="sm" variant="outline" onClick={handleAddMaterial}>
-                    <Plus className="h-4 w-4 mr-2" />
+              <div className="space-y-3">
+                <div className="flex items-center justify-between border-b border-border pb-1.5">
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-foreground">Materiais</h3>
+                  <Button type="button" size="sm" variant="outline" onClick={handleAddMaterial} className="h-7 text-xs px-2.5">
+                    <Plus className="h-3.5 w-3.5 mr-1" />
                     Adicionar
                   </Button>
                 </div>
                 {fields.map((field, index) => (
-                  <div key={field.id} className="flex items-start gap-2 p-2 border rounded-md">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-2 flex-1">
-                      <FormField
-                        control={form.control}
-                        name={`materiais.${index}.codigo`}
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="text-xs">Código</FormLabel>
-                            <FormControl>
-                              <Input
-                                {...field}
-                                placeholder="3208120022"
-                                maxLength={10}
-                                onChange={e => field.onChange(e.target.value.replace(/\D/g, ""))}
-                              />
-                            </FormControl>
-                            <FormMessage className="text-xs" />
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name={`materiais.${index}.descricao`}
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="text-xs">Descrição</FormLabel>
-                            <FormControl>
-                              <Input
-                                {...field}
-                                placeholder="ELETRODUTO PVC..."
-                                onChange={e =>
-                                  field.onChange(
-                                    e.target.value.toUpperCase().replace(/[^A-Z0-9\s]/g, ""),
-                                  )
-                                }
-                              />
-                            </FormControl>
-                            <FormMessage className="text-xs" />
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name={`materiais.${index}.quantidade`}
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel className="text-xs">Quantidade</FormLabel>
-                            <FormControl>
-                              <Input type="number" {...field} min="1" />
-                            </FormControl>
-                            <FormMessage className="text-xs" />
-                          </FormItem>
-                        )}
-                      />
+                  <div key={field.id} className="flex items-end gap-2 p-2.5 border rounded-md bg-card">
+                    <div className="grid grid-cols-1 sm:grid-cols-12 gap-2 flex-1 items-end">
+                      <div className="sm:col-span-3">
+                        <FormField
+                          control={form.control}
+                          name={`materiais.${index}.codigo`}
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="text-xs">Código</FormLabel>
+                              <FormControl>
+                                <Input
+                                  {...field}
+                                  placeholder="3208120022"
+                                  maxLength={10}
+                                  onChange={e => field.onChange(e.target.value.replace(/\D/g, ""))}
+                                  className="h-8 text-xs px-2"
+                                />
+                              </FormControl>
+                              <FormMessage className="text-[10px]" />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+                      <div className="sm:col-span-6">
+                        <FormField
+                          control={form.control}
+                          name={`materiais.${index}.descricao`}
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="text-xs">Descrição</FormLabel>
+                              <FormControl>
+                                <Input
+                                  {...field}
+                                  placeholder="ELETRODUTO PVC..."
+                                  onChange={e =>
+                                    field.onChange(
+                                      e.target.value.toUpperCase().replace(/[^A-Z0-9\s]/g, ""),
+                                    )
+                                  }
+                                  className="h-8 text-xs px-2"
+                                />
+                              </FormControl>
+                              <FormMessage className="text-[10px]" />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+                      <div className="sm:col-span-3">
+                        <FormField
+                          control={form.control}
+                          name={`materiais.${index}.quantidade`}
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="text-xs">Quantidade</FormLabel>
+                              <FormControl>
+                                <Input type="number" {...field} min="1" className="h-8 text-xs px-2" />
+                              </FormControl>
+                              <FormMessage className="text-[10px]" />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
                     </div>
                     <Button
                       type="button"
                       variant="ghost"
-                      size="icon"
-                      className="mt-6"
+                      size="sm"
+                      className="h-8 w-8 p-0 text-destructive hover:bg-destructive/10"
                       onClick={() => remove(index)}
+                      title="Remover item"
                     >
-                      <Trash2 className="h-4 w-4 text-destructive" />
+                      <Trash2 className="h-4 w-4" />
                     </Button>
                   </div>
                 ))}
                 {form.formState.errors.materiais?.root && (
-                  <p className="text-sm font-medium text-destructive">
+                  <p className="text-xs font-medium text-destructive">
                     {form.formState.errors.materiais.root.message}
                   </p>
                 )}
               </div>
             )}
 
-            <DialogFooter>
-              <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
+            <DialogFooter className="pt-2 gap-2 sm:gap-2">
+              <Button type="button" variant="outline" size="sm" onClick={() => onOpenChange(false)}>
                 Cancelar
               </Button>
               <Button
                 type="button"
                 variant="outline"
+                size="sm"
                 onClick={handleCopy}
                 disabled={!form.formState.isValid}
-                className="gap-2"
+                className="gap-1.5"
               >
-                <Copy className="h-4 w-4" />
-                Copiar
+                <Copy className="h-3.5 w-3.5" />
+                Copiar Textos
               </Button>
-              <Button type="submit">Solicitar</Button>
+              <Button type="submit" size="sm">Solicitar</Button>
             </DialogFooter>
           </form>
         </Form>
