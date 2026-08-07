@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Eye, Pencil, Trash2, Loader2, Clock } from "lucide-react";
+import { Eye, Pencil, Trash2, Loader2, Clock, Mail } from "lucide-react";
 import { Processo } from "@/types/processo";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
@@ -18,6 +18,7 @@ import { ProcessoDetalhesDialog } from "./ProcessoDetalhesDialog";
 import { ProcessoDeleteDialog } from "./ProcessoDeleteDialog";
 import ClickToCopy from "./ClickToCopy";
 import { UpdateStatusDialog } from "./UpdateStatusDialog";
+import { SCDIEmailPreviewModal } from "./SCDIEmailPreviewModal";
 
 interface ProcessosTableProps {
   processos: Processo[];
@@ -69,6 +70,7 @@ export function ProcessosTable({
   const [selectedProcesso, setSelectedProcesso] = useState<Processo | null>(null);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [statusUpdateOpen, setStatusUpdateOpen] = useState(false);
+  const [emailPreviewOpen, setEmailPreviewOpen] = useState(false);
 
   const handleOpenDetails = (processo: Processo) => {
     setSelectedProcesso(processo);
@@ -83,6 +85,11 @@ export function ProcessosTable({
   const handleOpenStatusUpdate = (processo: Processo) => {
     setSelectedProcesso(processo);
     setStatusUpdateOpen(true);
+  };
+
+  const handleOpenEmailPreview = (processo: Processo) => {
+    setSelectedProcesso(processo);
+    setEmailPreviewOpen(true);
   };
 
   return (
@@ -155,6 +162,15 @@ export function ProcessosTable({
                     <Button
                       variant="ghost"
                       size="icon"
+                      onClick={() => handleOpenEmailPreview(processo)}
+                      title="Preview do E-mail (HTML)"
+                      className="text-primary hover:text-primary/80"
+                    >
+                      <Mail className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
                       onClick={() => onEdit(processo)}
                       title="Editar"
                     >
@@ -207,6 +223,11 @@ export function ProcessosTable({
             processo={selectedProcesso}
             open={statusUpdateOpen}
             onOpenChange={setStatusUpdateOpen}
+          />
+          <SCDIEmailPreviewModal
+            processo={selectedProcesso}
+            open={emailPreviewOpen}
+            onOpenChange={setEmailPreviewOpen}
           />
         </>
       )}

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Eye, Pencil, Trash2, Clock } from "lucide-react";
+import { Eye, Pencil, Trash2, Clock, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -17,6 +17,7 @@ import { format, differenceInDays } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import ClickToCopy from "./ClickToCopy";
 import { UpdateStatusDialog } from "./UpdateStatusDialog";
+import { SCDIEmailPreviewModal } from "./SCDIEmailPreviewModal";
 
 interface ProcessoCardProps {
   processo: Processo;
@@ -61,6 +62,7 @@ export function ProcessoCard({ processo, onEdit, onDelete, isDeleting }: Process
   const [detailsOpen, setDetailsOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [statusUpdateOpen, setStatusUpdateOpen] = useState(false);
+  const [emailPreviewOpen, setEmailPreviewOpen] = useState(false);
 
   const processDate = new Date(`${processo.dataProcesso}T00:00:00`);
   const formattedDate = format(processDate, "dd/MM/yyyy", { locale: ptBR });
@@ -160,6 +162,15 @@ export function ProcessoCard({ processo, onEdit, onDelete, isDeleting }: Process
             <Button
               variant="outline"
               size="sm"
+              className="flex-1 gap-2 border-primary/30 text-primary hover:bg-primary/10"
+              onClick={() => setEmailPreviewOpen(true)}
+            >
+              <Mail className="h-4 w-4" />
+              Preview E-mail
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
               className="flex-1 gap-2"
               onClick={() => setDetailsOpen(true)}
             >
@@ -195,6 +206,11 @@ export function ProcessoCard({ processo, onEdit, onDelete, isDeleting }: Process
         processo={processo}
         open={statusUpdateOpen}
         onOpenChange={setStatusUpdateOpen}
+      />
+      <SCDIEmailPreviewModal
+        processo={processo}
+        open={emailPreviewOpen}
+        onOpenChange={setEmailPreviewOpen}
       />
     </div>
   );

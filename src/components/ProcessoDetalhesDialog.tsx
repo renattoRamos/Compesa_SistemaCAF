@@ -13,13 +13,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { Copy, Clock, Mail } from "lucide-react";
+import { Copy, Clock, Mail, Eye } from "lucide-react";
 import { Processo } from "@/types/processo";
 import { useProcessoCopy } from "@/hooks/useProcessoCopy";
 import { ProcessoInfo } from "./ProcessoInfo";
 import { ProcessoMateriaisTable } from "./ProcessoMateriaisTable";
 import { Separator } from "./ui/separator";
 import { UpdateStatusDialog } from "./UpdateStatusDialog";
+import { SCDIEmailPreviewModal } from "./SCDIEmailPreviewModal";
 
 interface ProcessoDetalhesDialogProps {
   processo: Processo;
@@ -35,6 +36,7 @@ export function ProcessoDetalhesDialog({
   const { handleCopyToEmail, handleCopyToWhatsApp, handleCopyToEmailCD } =
     useProcessoCopy(processo);
   const [statusUpdateOpen, setStatusUpdateOpen] = useState(false);
+  const [emailPreviewOpen, setEmailPreviewOpen] = useState(false);
 
   const canUpdateStatus =
     processo.status === "Pendente" || processo.status === "Aguardando Entrega";
@@ -69,27 +71,39 @@ export function ProcessoDetalhesDialog({
                     variant="outline"
                     size="sm"
                     className="gap-2 text-primary border-primary/30 hover:bg-primary/10"
-                    onClick={handleCopyToEmailCD}
+                    onClick={() => setEmailPreviewOpen(true)}
+                  >
+                    <Eye className="h-4 w-4" />
+                    Preview E-mail
+                  </Button>
+                  <Button
+                    variant="default"
+                    size="sm"
+                    className="gap-2 bg-primary hover:bg-primary/90"
+                    onClick={handleCopyToEmail}
                   >
                     <Mail className="h-4 w-4" />
-                    E-mail CD
+                    Copiar E-mail SCDI
                   </Button>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="outline" size="sm" className="gap-2">
                         <Copy className="h-4 w-4" />
-                        Copiar
+                        Mais Opções
                       </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent>
-                      <DropdownMenuItem onClick={handleCopyToEmailCD}>
-                        E-mail CD
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem onClick={() => setEmailPreviewOpen(true)}>
+                        <Eye className="h-4 w-4 mr-2" /> Preview do E-mail (HTML)
                       </DropdownMenuItem>
                       <DropdownMenuItem onClick={handleCopyToEmail}>
-                        Cópia para E-mail (SCDI)
+                        <Mail className="h-4 w-4 mr-2" /> Copiar E-mail SCDI (HTML)
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={handleCopyToEmailCD}>
+                        <Mail className="h-4 w-4 mr-2" /> Copiar E-mail CD (HTML)
                       </DropdownMenuItem>
                       <DropdownMenuItem onClick={handleCopyToWhatsApp}>
-                        Cópia para WhatsApp
+                        <Copy className="h-4 w-4 mr-2" /> Copiar para WhatsApp
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
@@ -107,11 +121,16 @@ export function ProcessoDetalhesDialog({
           </div>
         </DialogContent>
       </Dialog>
-      {/* O UpdateStatusDialog é renderizado fora do DialogContent principal para evitar problemas de aninhamento de modais */}
+      {/* Modais auxiliares fora da árvore do dialog principal */}
       <UpdateStatusDialog
         processo={processo}
         open={statusUpdateOpen}
         onOpenChange={setStatusUpdateOpen}
+      />
+      <SCDIEmailPreviewModal
+        processo={processo}
+        open={emailPreviewOpen}
+        onOpenChange={setEmailPreviewOpen}
       />
     </>
   );

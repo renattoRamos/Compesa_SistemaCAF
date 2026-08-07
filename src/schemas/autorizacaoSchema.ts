@@ -59,3 +59,8 @@ export const createNewMaterial = (): MaterialInForm => ({
   estoqueCD: "indisponivel",
   ataArp: "indisponivel",
 });
+
+export const cloneMaterial = (material: MaterialInForm): MaterialInForm => ({
+  ...material,
+  tempId: `mat-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`,
+});
