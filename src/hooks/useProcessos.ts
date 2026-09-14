@@ -122,6 +122,11 @@ const updateProcessoStatus = async ({
   }
 };
 
+const bulkSetProcessos = async (newProcessos: Processo[]): Promise<Processo[]> => {
+  saveStoredProcessos(newProcessos);
+  return newProcessos;
+};
+
 // --- Custom Hook ---
 export const useProcessos = () => {
   const queryClient = useQueryClient();
@@ -139,6 +144,17 @@ export const useProcessos = () => {
     },
     onError: (err) => {
       toast.error(`Erro ao salvar processo: ${err.message}`);
+    },
+  });
+
+  const bulkImportMutation = useMutation<Processo[], Error, Processo[]>({
+    mutationFn: bulkSetProcessos,
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["processos"] });
+      toast.success(`${data.length} processos carregados com sucesso!`);
+    },
+    onError: (err) => {
+      toast.error(`Erro ao carregar processos: ${err.message}`);
     },
   });
 
@@ -179,5 +195,7 @@ export const useProcessos = () => {
     deletingId: deleteMutation.variables,
     updateProcessoStatus: updateStatusMutation.mutate,
     isUpdatingStatus: updateStatusMutation.isPending,
+    setAllProcessos: bulkImportMutation.mutateAsync,
+    isBulkImporting: bulkImportMutation.isPending,
   };
 };
